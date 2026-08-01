@@ -1,0 +1,404 @@
+/* Shared primitives: Card, Skeleton, EmptyState, Input, Modal, Toast, Spinner. */
+
+/* ---------------- Card ---------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: box-shadow var(--d-base) var(--ease),
+    transform var(--d-base) var(--ease), border-color var(--d-base) var(--ease);
+}
+
+.cardHover:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-2);
+  box-shadow: var(--e-2);
+}
+
+.cardHover:active {
+  transform: translateY(0);
+}
+
+.padNone {
+  padding: 0;
+}
+.padSm {
+  padding: var(--s-4);
+}
+.padMd {
+  padding: var(--s-5);
+}
+.padLg {
+  padding: var(--s-6);
+}
+
+/* ---------------- Skeleton ---------------- */
+.skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-4) 37%,
+    var(--surface-3) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* ---------------- Spinner ---------------- */
+.spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid var(--line-2);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinnerCenter {
+  display: grid;
+  place-items: center;
+  padding: var(--s-12) var(--s-4);
+}
+
+/* ---------------- EmptyState ---------------- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--s-12) var(--s-6);
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--surface-3);
+  color: var(--text-3);
+}
+
+.emptyTitle {
+  font-size: var(--t-lg);
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+}
+
+.emptyText {
+  margin-top: var(--s-2);
+  max-width: 42ch;
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.emptyAction {
+  margin-top: var(--s-5);
+}
+
+/* ---------------- ErrorMessage ---------------- */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--t-base);
+}
+
+.errorIcon {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* ---------------- Input ---------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.label {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: 0;
+}
+
+.control {
+  width: 100%;
+  height: 46px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-size: var(--t-md);
+  transition: border-color var(--d-fast) var(--ease),
+    box-shadow var(--d-fast) var(--ease);
+}
+
+textarea.control {
+  height: auto;
+  min-height: 96px;
+  padding: var(--s-3) var(--s-4);
+  resize: vertical;
+}
+
+.control::placeholder {
+  color: var(--text-3);
+}
+
+.control:hover {
+  border-color: var(--line-3);
+}
+
+.control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.controlError {
+  border-color: var(--danger);
+}
+
+.controlError:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.hint {
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+.hintError {
+  color: var(--danger);
+}
+
+/* ---------------- Modal ---------------- */
+.modalRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--s-5);
+}
+
+.modalScrim {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  background: rgba(24, 24, 22, 0.32);
+  backdrop-filter: blur(2px);
+  animation: scrimIn var(--d-base) var(--ease-out);
+}
+
+.modalPanel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100vh - var(--s-10));
+  overflow-y: auto;
+  padding: var(--s-6);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--e-3);
+  animation: modalIn var(--d-slow) var(--ease-out);
+}
+
+.modalHead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+}
+
+.modalTitle {
+  flex: 1;
+  font-size: var(--t-xl);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.modalDescription {
+  margin-top: var(--s-1);
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+}
+
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@media (max-width: 600px) {
+  .modalRoot {
+    place-items: end center;
+    padding: 0;
+  }
+
+  .modalPanel {
+    max-width: none;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding-bottom: var(--s-8);
+    animation: sheetIn var(--d-slow) var(--ease-out);
+  }
+
+  .modalFooter {
+    flex-direction: column-reverse;
+  }
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* ---------------- Toast ---------------- */
+.toastLayer {
+  position: fixed;
+  z-index: 80;
+  right: var(--s-6);
+  bottom: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-width: 260px;
+  max-width: 380px;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--text);
+  color: var(--text-inverse);
+  box-shadow: var(--e-3);
+  font-size: var(--t-base);
+  pointer-events: auto;
+  animation: toastIn var(--d-slow) var(--ease-out);
+}
+
+.toastLeaving {
+  animation: toastOut var(--d-base) var(--ease) forwards;
+}
+
+.toastIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  color: #fff;
+}
+
+.toastIconError {
+  background: var(--danger);
+}
+
+.toastBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.toastTitle {
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+}
+
+.toastText {
+  margin-top: 1px;
+  font-size: var(--t-sm);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.toastClose {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  color: rgba(255, 255, 255, 0.6);
+  transition: background-color var(--d-fast) var(--ease),
+    color var(--d-fast) var(--ease);
+}
+
+.toastClose:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+}
+
+@keyframes toastOut {
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+@media (max-width: 600px) {
+  .toastLayer {
+    right: var(--s-4);
+    left: var(--s-4);
+    bottom: var(--s-4);
+  }
+
+  .toast {
+    min-width: 0;
+    max-width: none;
+  }
+}

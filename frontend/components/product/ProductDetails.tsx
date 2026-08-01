@@ -1,0 +1,2 @@
+// Product details placeholder.
+export {};

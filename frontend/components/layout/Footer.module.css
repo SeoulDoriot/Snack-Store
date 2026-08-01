@@ -1,0 +1,26 @@
+.footer {
+  width: 100%;
+  max-width: 1240px;
+  margin: var(--s-6) auto 0;
+  padding: 0 var(--s-2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-6);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.brand {
+  font-weight: 600;
+  color: #5f736a;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    margin-top: var(--s-5);
+    padding: 0 var(--s-4);
+    font-size: 13.5px;
+  }
+}

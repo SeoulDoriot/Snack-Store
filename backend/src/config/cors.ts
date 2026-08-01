@@ -1,0 +1,2 @@
+// CORS policy placeholder.
+export {};

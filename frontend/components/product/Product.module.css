@@ -1,0 +1,495 @@
+/* ---------------- Search ---------------- */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--s-4);
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 46px;
+  padding: 0 var(--s-10) 0 var(--s-10);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-size: var(--t-md);
+  transition: border-color var(--d-fast) var(--ease),
+    box-shadow var(--d-fast) var(--ease), background-color var(--d-fast) var(--ease);
+}
+
+.searchInput::placeholder {
+  color: var(--text-3);
+}
+
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.searchInput:hover {
+  border-color: var(--line-3);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.searchClear {
+  position: absolute;
+  right: var(--s-2);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  color: var(--text-3);
+  transition: background-color var(--d-fast) var(--ease),
+    color var(--d-fast) var(--ease);
+}
+
+.searchClear:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* ---------------- Category filter chips ---------------- */
+.filters {
+  position: relative;
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+.pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--r-full);
+  background: var(--text);
+  transition: transform 0.42s var(--ease), width 0.42s var(--ease),
+    height 0.42s var(--ease), opacity 0.2s linear;
+}
+
+.pill[data-ready="false"] {
+  opacity: 0;
+}
+
+.chip {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  height: 36px;
+  padding: 0 var(--s-4);
+  font-size: var(--t-base);
+  font-weight: 550;
+  letter-spacing: var(--tr-tight);
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-full);
+  transition: color var(--d-base) var(--ease),
+    border-color var(--d-base) var(--ease), transform var(--d-fast) var(--ease);
+}
+
+.chip:hover {
+  color: var(--text);
+  border-color: var(--line-3);
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+.chipActive {
+  color: var(--text-inverse);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.chipActive:hover {
+  color: var(--text-inverse);
+  border-color: transparent;
+}
+
+/* ---------------- Promo posters ---------------- */
+.promoSection {
+  margin-top: var(--s-8);
+}
+
+.promoHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+}
+
+.promoNav {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.promoTrack {
+  display: flex;
+  gap: var(--s-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* Room for the hover lift so it is not clipped by the scroll container. */
+  padding: 4px 0 var(--s-2);
+  margin: -4px 0 0;
+}
+
+.promoTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.poster {
+  flex: none;
+  width: 340px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  transition: transform var(--d-base) var(--ease),
+    box-shadow var(--d-base) var(--ease), border-color var(--d-base) var(--ease);
+}
+
+.poster:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-2);
+  box-shadow: var(--e-2);
+}
+
+/* Art is the point of a poster, so it gets the height and the colour. */
+.posterArt {
+  display: grid;
+  place-items: center;
+  height: 148px;
+  font-size: 64px;
+  line-height: 1;
+}
+
+.poster[data-tone="0"] .posterArt {
+  background: linear-gradient(150deg, #f3f4f1 0%, #e7eae5 100%);
+}
+
+.poster[data-tone="1"] .posterArt {
+  background: linear-gradient(150deg, #f1f6f2 0%, #e2eee6 100%);
+}
+
+.poster[data-tone="2"] .posterArt {
+  background: linear-gradient(150deg, #f5f3ef 0%, #ece7de 100%);
+}
+
+.posterBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--s-4) var(--s-5) var(--s-5);
+}
+
+.posterEyebrow {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.posterTitle {
+  margin-top: var(--s-2);
+  font-size: var(--t-xl);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.posterText {
+  margin-top: var(--s-1);
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.posterFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+}
+
+.posterPrice {
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: var(--tr-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------- Product grid ---------------- */
+.grid {
+  display: grid;
+  gap: var(--s-3);
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  align-items: stretch;
+}
+
+/* Page transition between categories */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--dir, 1) * 28px), 8px, 0) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cardOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(calc(var(--dir, 1) * -22px), 0, 0) scale(0.995);
+  }
+}
+
+.pageIn > * {
+  animation: cardIn 0.46s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 32ms);
+}
+
+.pageOut > * {
+  animation: cardOut 0.19s var(--ease) both;
+}
+
+/* ---------------- Product card ---------------- */
+.card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: border-color var(--d-base) var(--ease),
+    box-shadow var(--d-base) var(--ease), transform var(--d-base) var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-2);
+  box-shadow: var(--e-2);
+}
+
+.media {
+  position: relative;
+  flex: none;
+}
+
+.thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.fav {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  color: var(--text-3);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity var(--d-fast) var(--ease),
+    transform var(--d-fast) var(--ease), color var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease);
+}
+
+/* Always visible once saved, on touch devices, and on hover/focus. */
+.card:hover .fav,
+.card:focus-within .fav,
+.favActive {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fav:hover {
+  color: var(--text);
+  border-color: var(--line-3);
+}
+
+.favActive {
+  color: var(--danger);
+  border-color: #f0d2d2;
+}
+
+.favActive:hover {
+  color: var(--danger);
+}
+
+@media (hover: none) {
+  .fav {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+}
+
+.description {
+  margin-top: 1px;
+  font-size: var(--t-base);
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stock {
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+.stockOut {
+  color: var(--danger);
+}
+
+.side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-2);
+  padding-right: var(--s-1);
+}
+
+.price {
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: var(--tr-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.promo {
+  position: absolute;
+  top: var(--s-3);
+  right: var(--s-3);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-xs);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .poster {
+    width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 2px var(--s-4);
+    margin: 0 calc(var(--s-4) * -1);
+    scroll-padding: var(--s-4);
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .promoTrack {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+    margin-left: calc(var(--s-4) * -1);
+    margin-right: calc(var(--s-4) * -1);
+    scroll-padding-left: var(--s-4);
+  }
+
+  .poster {
+    width: 78vw;
+    max-width: 320px;
+  }
+
+  .posterArt {
+    height: 128px;
+    font-size: 56px;
+  }
+
+  /* Larger tap targets on the card itself. */
+  .card {
+    padding: var(--s-3);
+    gap: var(--s-3);
+  }
+
+  .thumb {
+    width: 64px;
+    height: 64px;
+    font-size: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .chip,
+  .card,
+  .poster {
+    transition-duration: 0.01ms;
+  }
+
+  .pageIn > *,
+  .pageOut > * {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
+}

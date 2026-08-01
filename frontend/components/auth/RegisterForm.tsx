@@ -1,0 +1,2 @@
+// Registration form placeholder.
+export {};

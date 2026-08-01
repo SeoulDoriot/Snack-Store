@@ -1,0 +1,1 @@
+-- Canonical schema placeholder: users, products, orders, and order_items.

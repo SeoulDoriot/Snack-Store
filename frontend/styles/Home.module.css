@@ -1,0 +1,142 @@
+/* Home page styles. */
+
+.content {
+  padding: var(--s-6) var(--s-8) var(--s-10);
+}
+
+/* ---------------- Hero ----------------
+ * Typography on the card surface rather than a coloured block, so the
+ * products start close to the top of the page.
+ */
+.hero {
+  max-width: 620px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 26px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+.headline {
+  margin-top: var(--s-4);
+  font-size: var(--t-3xl);
+  line-height: var(--lh-tight);
+  font-weight: 680;
+  letter-spacing: var(--tr-tighter);
+  text-wrap: balance;
+}
+
+.subhead {
+  margin-top: var(--s-2);
+  font-size: var(--t-md);
+  color: var(--text-2);
+}
+
+/* ---------------- Toolbar ---------------- */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin-top: var(--s-7);
+}
+
+.searchSlot {
+  max-width: 460px;
+}
+
+/* ---------------- Sections ---------------- */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin: var(--s-8) 0 var(--s-4);
+}
+
+.sectionTitle {
+  font-size: var(--t-xl);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.sectionCount {
+  font-size: var(--t-base);
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thin rule that separates the offers strip from the catalog. */
+.rule {
+  height: 1px;
+  margin-top: var(--s-8);
+  background: var(--line);
+}
+
+/* ---------------- Skeletons ---------------- */
+.skeletonGrid {
+  display: grid;
+  gap: var(--s-3);
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.skeletonCard {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+.skeletonBody {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding: var(--s-5) var(--s-5) var(--s-8);
+  }
+
+  .headline {
+    font-size: var(--t-2xl);
+  }
+
+  .skeletonGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: var(--s-5) var(--s-4) var(--s-8);
+  }
+
+  .headline {
+    font-size: var(--t-2xl);
+  }
+
+  .subhead {
+    font-size: var(--t-base);
+  }
+
+  .toolbar {
+    margin-top: var(--s-6);
+  }
+
+  .searchSlot {
+    max-width: none;
+  }
+
+  .sectionHead {
+    margin: var(--s-7) 0 var(--s-3);
+  }
+}

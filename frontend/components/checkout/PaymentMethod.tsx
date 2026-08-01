@@ -1,0 +1,2 @@
+// Payment selection placeholder.
+export {};

@@ -1,0 +1,41 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+}
+
+.canvas {
+  flex: 1;
+  width: 100%;
+  padding: var(--s-8) var(--s-8) var(--s-10);
+}
+
+.card {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .canvas {
+    padding: var(--s-5) var(--s-5) var(--s-8);
+  }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+  .canvas {
+    padding: 0 0 var(--s-6);
+  }
+
+  .card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

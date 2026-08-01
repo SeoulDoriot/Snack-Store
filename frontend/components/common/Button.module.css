@@ -1,0 +1,148 @@
+.base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+  border-radius: var(--r-md);
+  white-space: nowrap;
+  transition: background-color var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease), color var(--d-fast) var(--ease),
+    box-shadow var(--d-base) var(--ease), transform var(--d-fast) var(--ease);
+}
+
+.base:active {
+  transform: scale(0.975);
+}
+
+.base:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---- Variants ---- */
+.primary {
+  background: var(--accent);
+  color: var(--text-inverse);
+  box-shadow: var(--e-accent);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(11, 107, 58, 0.24);
+}
+
+.primary:active:not(:disabled) {
+  background: var(--accent-active);
+}
+
+.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line-2);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--line-3);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-2);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.soft {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.soft:hover:not(:disabled) {
+  background: var(--surface-4);
+}
+
+.danger {
+  background: var(--danger);
+  color: var(--text-inverse);
+}
+
+.danger:hover:not(:disabled) {
+  background: #b93434;
+}
+
+.pill {
+  background: var(--surface);
+  color: var(--text-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-full);
+}
+
+.pill:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line-3);
+  background: var(--surface-2);
+}
+
+.pillActive {
+  background: var(--text);
+  border: 1px solid var(--text);
+  color: var(--text-inverse);
+  border-radius: var(--r-full);
+}
+
+.pillActive:hover:not(:disabled) {
+  background: #000;
+}
+
+/* ---- Sizes ---- */
+.xs {
+  height: 32px;
+  padding: 0 var(--s-3);
+  font-size: var(--t-sm);
+  border-radius: var(--r-sm);
+}
+
+.sm {
+  height: 38px;
+  padding: 0 var(--s-4);
+  font-size: var(--t-base);
+  border-radius: var(--r-sm);
+}
+
+.md {
+  height: 46px;
+  padding: 0 var(--s-6);
+  font-size: var(--t-md);
+}
+
+.lg {
+  height: 54px;
+  padding: 0 var(--s-8);
+  font-size: var(--t-lg);
+  border-radius: var(--r-lg);
+}
+
+.icon {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: var(--r-md);
+}
+
+.iconSm {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: var(--r-sm);
+}
+
+.block {
+  width: 100%;
+}

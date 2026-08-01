@@ -1,0 +1,128 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-8);
+}
+
+.mark {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: var(--text-inverse);
+  display: grid;
+  place-items: center;
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: var(--tr-tight);
+}
+
+.identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--t-lg);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: 1px;
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+/* Small green dot that reads as "open" without adding a coloured chip. */
+.status {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: var(--accent);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.cartSlot {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  color: var(--text-inverse);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  place-items: center;
+  animation: badgePop var(--d-slow) var(--ease);
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.16);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    padding: var(--s-4) var(--s-5);
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: var(--s-4);
+    gap: var(--s-3);
+  }
+
+  .mark {
+    width: 36px;
+    height: 36px;
+    font-size: var(--t-md);
+  }
+
+  .name {
+    font-size: var(--t-md);
+  }
+}

@@ -1,0 +1,10 @@
+/* Animates its own height as the content inside changes. */
+.outer {
+  transition: height 0.45s var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outer {
+    transition-duration: 0.01ms;
+  }
+}

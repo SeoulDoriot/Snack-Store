@@ -1,0 +1,1 @@
+-- Add lookup and foreign-key indexes.
