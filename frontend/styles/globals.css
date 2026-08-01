@@ -184,6 +184,30 @@ textarea {
   border-radius: var(--r-xs);
 }
 
+/* Shared page width. Used by the header, page content and footer so every
+   band lines up on one grid while backgrounds stay full-bleed. */
+.appWidth {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: var(--s-8);
+  padding-right: var(--s-8);
+}
+
+@media (max-width: 900px) {
+  .appWidth {
+    padding-left: var(--s-5);
+    padding-right: var(--s-5);
+  }
+}
+
+@media (max-width: 600px) {
+  .appWidth {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+  }
+}
+
 /* Visually hidden but available to screen readers. */
 .srOnly {
   position: absolute;

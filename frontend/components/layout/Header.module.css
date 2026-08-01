@@ -1,31 +1,51 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
   display: flex;
   align-items: center;
   gap: var(--s-4);
-  padding: var(--s-5) var(--s-8);
+  height: 68px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: none;
+  text-decoration: none;
+  color: inherit;
 }
 
 .mark {
-  width: 40px;
-  height: 40px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
   flex: none;
   border-radius: var(--r-md);
   background: var(--accent);
   color: var(--text-inverse);
-  display: grid;
-  place-items: center;
-  font-size: var(--t-lg);
+  font-size: var(--t-md);
   font-weight: 700;
   letter-spacing: var(--tr-tight);
 }
 
 .identity {
-  flex: 1;
+  display: block;
   min-width: 0;
 }
 
 .name {
-  font-size: var(--t-lg);
+  display: block;
+  font-size: var(--t-md);
   font-weight: 650;
   letter-spacing: var(--tr-tight);
   line-height: 1.2;
@@ -40,7 +60,7 @@
   color: var(--text-3);
 }
 
-/* Small green dot that reads as "open" without adding a coloured chip. */
+/* Small green dot that reads as "open" without a coloured chip. */
 .status {
   width: 6px;
   height: 6px;
@@ -49,10 +69,88 @@
   background: var(--accent);
 }
 
+/* ---------------- Search ----------------
+ * Collapsed to zero width until opened, so it costs no space by default.
+ */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: max-width var(--d-slow) var(--ease), opacity var(--d-base) var(--ease);
+}
+
+.search[data-open="true"] {
+  max-width: 520px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--s-3);
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--s-10) 0 var(--s-8);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  font-size: var(--t-base);
+  transition: border-color var(--d-fast) var(--ease),
+    box-shadow var(--d-fast) var(--ease), background-color var(--d-fast) var(--ease);
+}
+
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.searchInput::placeholder {
+  color: var(--text-3);
+}
+
+.searchInput:focus {
+  outline: none;
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.searchClose {
+  position: absolute;
+  right: var(--s-2);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-full);
+  color: var(--text-3);
+  transition: background-color var(--d-fast) var(--ease),
+    color var(--d-fast) var(--ease);
+}
+
+.searchClose:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* ---------------- Actions ---------------- */
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--s-2);
+  gap: var(--s-1);
+  margin-left: auto;
+  flex: none;
 }
 
 .cartSlot {
@@ -62,10 +160,10 @@
 
 .badge {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  min-width: 19px;
-  height: 19px;
+  top: -1px;
+  right: -1px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 5px;
   border-radius: var(--r-full);
   background: var(--accent);
@@ -77,6 +175,23 @@
   display: grid;
   place-items: center;
   animation: badgePop var(--d-slow) var(--ease);
+}
+
+.profile {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  text-decoration: none;
+  transition: background-color var(--d-fast) var(--ease),
+    color var(--d-fast) var(--ease);
+}
+
+.profile:hover {
+  background: var(--surface-3);
+  color: var(--text);
 }
 
 @keyframes badgePop {
@@ -93,36 +208,39 @@
   }
 }
 
-.divider {
-  height: 1px;
-  background: var(--line);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .badge {
     animation: none;
   }
 }
 
-@media (max-width: 900px) {
-  .header {
-    padding: var(--s-4) var(--s-5);
+@media (max-width: 700px) {
+  .inner {
+    height: 60px;
+    gap: var(--s-2);
+  }
+
+  /* On phones the open field takes over the whole bar; its own close
+     button is how you get back, so the other actions step aside. */
+  .search[data-open="true"] {
+    max-width: none;
+  }
+
+  .search[data-open="true"] ~ .actions {
+    display: none;
+  }
+
+  .inner:has(.search[data-open="true"]) .brand {
+    display: none;
+  }
+
+  .meta {
+    font-size: var(--t-xs);
   }
 }
 
-@media (max-width: 600px) {
-  .header {
-    padding: var(--s-4);
-    gap: var(--s-3);
-  }
-
-  .mark {
-    width: 36px;
-    height: 36px;
-    font-size: var(--t-md);
-  }
-
-  .name {
-    font-size: var(--t-md);
+@media (max-width: 380px) {
+  .identity {
+    display: none;
   }
 }

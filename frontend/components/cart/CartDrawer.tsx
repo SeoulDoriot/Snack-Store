@@ -12,6 +12,7 @@ interface CartDrawerProps {
   subtotal: number;
   onClose: () => void;
   onQuantityChange: (id: string, quantity: number) => void;
+  onRemove?: (id: string) => void;
   onCheckout: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function CartDrawer({
   subtotal,
   onClose,
   onQuantityChange,
+  onRemove,
   onCheckout,
 }: CartDrawerProps) {
   useEffect(() => {
@@ -78,10 +80,16 @@ export default function CartDrawer({
                   key={line.product.id}
                   line={line}
                   onQuantityChange={onQuantityChange}
+                  onRemove={onRemove}
                 />
               ))}
             </ul>
-            <CartSummary subtotal={subtotal} delivery={0} onCheckout={onCheckout} />
+            <CartSummary
+              subtotal={subtotal}
+              delivery={0}
+              onCheckout={onCheckout}
+              showBagLink
+            />
           </>
         ) : (
           <div className={styles.empty}>

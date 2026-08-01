@@ -1,67 +1,3 @@
-/* ---------------- Search ---------------- */
-.search {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.searchIcon {
-  position: absolute;
-  left: var(--s-4);
-  display: grid;
-  place-items: center;
-  color: var(--text-3);
-  pointer-events: none;
-}
-
-.searchInput {
-  width: 100%;
-  height: 46px;
-  padding: 0 var(--s-10) 0 var(--s-10);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-md);
-  background: var(--surface);
-  font-size: var(--t-md);
-  transition: border-color var(--d-fast) var(--ease),
-    box-shadow var(--d-fast) var(--ease), background-color var(--d-fast) var(--ease);
-}
-
-.searchInput::placeholder {
-  color: var(--text-3);
-}
-
-.searchInput::-webkit-search-cancel-button {
-  appearance: none;
-}
-
-.searchInput:hover {
-  border-color: var(--line-3);
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.searchClear {
-  position: absolute;
-  right: var(--s-2);
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--r-sm);
-  color: var(--text-3);
-  transition: background-color var(--d-fast) var(--ease),
-    color var(--d-fast) var(--ease);
-}
-
-.searchClear:hover {
-  background: var(--surface-3);
-  color: var(--text);
-}
-
 /* ---------------- Category filter chips ---------------- */
 .filters {
   position: relative;
@@ -89,8 +25,8 @@
   position: relative;
   z-index: 1;
   flex: none;
-  height: 36px;
-  padding: 0 var(--s-4);
+  height: 38px;
+  padding: 0 var(--s-5);
   font-size: var(--t-base);
   font-weight: 550;
   letter-spacing: var(--tr-tight);
@@ -122,49 +58,33 @@
   border-color: transparent;
 }
 
-/* ---------------- Promo posters ---------------- */
-.promoSection {
-  margin-top: var(--s-8);
-}
-
-.promoHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* ---------------- Featured posters ----------------
+ * Deliberately unlike a product card: big art, no price, no add button.
+ */
+.featured {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
   gap: var(--s-4);
-  margin-bottom: var(--s-4);
 }
 
-.promoNav {
-  display: flex;
-  gap: var(--s-2);
-}
-
-.promoTrack {
-  display: flex;
+.posterStack {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
   gap: var(--s-4);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  /* Room for the hover lift so it is not clipped by the scroll container. */
-  padding: 4px 0 var(--s-2);
-  margin: -4px 0 0;
-}
-
-.promoTrack::-webkit-scrollbar {
-  display: none;
+  min-width: 0;
 }
 
 .poster {
-  flex: none;
-  width: 340px;
-  scroll-snap-align: start;
+  position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  padding: var(--s-5);
   overflow: hidden;
+  text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  background: var(--surface);
   transition: transform var(--d-base) var(--ease),
     box-shadow var(--d-base) var(--ease), border-color var(--d-base) var(--ease);
 }
@@ -175,83 +95,102 @@
   box-shadow: var(--e-2);
 }
 
-/* Art is the point of a poster, so it gets the height and the colour. */
+.poster[data-tone="0"] {
+  background: linear-gradient(140deg, #f4f5f2 0%, #e8ebe6 100%);
+}
+
+.poster[data-tone="1"] {
+  background: linear-gradient(140deg, #f1f6f2 0%, #dfeee5 100%);
+}
+
+.poster[data-tone="2"] {
+  background: linear-gradient(140deg, #f6f3ee 0%, #ece5da 100%);
+}
+
+.posterLead {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: 300px;
+  padding: var(--s-8);
+}
+
 .posterArt {
   display: grid;
   place-items: center;
-  height: 148px;
-  font-size: 64px;
+  flex: none;
+  width: 68px;
+  height: 68px;
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 34px;
   line-height: 1;
 }
 
-.poster[data-tone="0"] .posterArt {
-  background: linear-gradient(150deg, #f3f4f1 0%, #e7eae5 100%);
-}
-
-.poster[data-tone="1"] .posterArt {
-  background: linear-gradient(150deg, #f1f6f2 0%, #e2eee6 100%);
-}
-
-.poster[data-tone="2"] .posterArt {
-  background: linear-gradient(150deg, #f5f3ef 0%, #ece7de 100%);
+.posterLead .posterArt {
+  width: 96px;
+  height: 96px;
+  margin-bottom: auto;
+  font-size: 52px;
 }
 
 .posterBody {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: var(--s-4) var(--s-5) var(--s-5);
+  display: block;
+  min-width: 0;
 }
 
 .posterEyebrow {
+  display: block;
   font-size: var(--t-xs);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--accent-text);
+  color: var(--text-2);
 }
 
 .posterTitle {
+  display: block;
   margin-top: var(--s-2);
-  font-size: var(--t-xl);
+  font-size: var(--t-lg);
   font-weight: 650;
   letter-spacing: var(--tr-tight);
+  color: var(--text);
+}
+
+.posterLead .posterTitle {
+  font-size: var(--t-2xl);
+  letter-spacing: var(--tr-tighter);
 }
 
 .posterText {
+  display: block;
   margin-top: var(--s-1);
   font-size: var(--t-base);
   color: var(--text-2);
 }
 
-.posterFoot {
-  display: flex;
+.posterLink {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--s-4);
-  margin-top: var(--s-5);
-}
-
-.posterPrice {
-  font-size: var(--t-xl);
-  font-weight: 700;
-  letter-spacing: var(--tr-tight);
-  font-variant-numeric: tabular-nums;
+  gap: var(--s-1);
+  margin-top: var(--s-3);
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--accent-text);
 }
 
 /* ---------------- Product grid ---------------- */
 .grid {
   display: grid;
-  gap: var(--s-3);
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   align-items: stretch;
 }
 
-/* Page transition between categories */
 @keyframes cardIn {
   from {
     opacity: 0;
-    transform: translate3d(calc(var(--dir, 1) * 28px), 8px, 0) scale(0.99);
+    transform: translate3d(calc(var(--dir, 1) * 24px), 8px, 0) scale(0.99);
   }
   to {
     opacity: 1;
@@ -266,13 +205,13 @@
   }
   to {
     opacity: 0;
-    transform: translate3d(calc(var(--dir, 1) * -22px), 0, 0) scale(0.995);
+    transform: translate3d(calc(var(--dir, 1) * -18px), 0, 0) scale(0.995);
   }
 }
 
 .pageIn > * {
   animation: cardIn 0.46s var(--ease) both;
-  animation-delay: calc(var(--i, 0) * 32ms);
+  animation-delay: calc(var(--i, 0) * 26ms);
 }
 
 .pageOut > * {
@@ -284,8 +223,7 @@
   position: relative;
   height: 100%;
   display: flex;
-  align-items: center;
-  gap: var(--s-4);
+  flex-direction: column;
   padding: var(--s-3);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -295,57 +233,67 @@
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--line-2);
   box-shadow: var(--e-2);
 }
 
 .media {
   position: relative;
-  flex: none;
-}
-
-.thumb {
-  width: 72px;
-  height: 72px;
-  border-radius: var(--r-md);
-  background: var(--surface-3);
   display: grid;
   place-items: center;
-  font-size: 34px;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  font-size: 52px;
   line-height: 1;
+}
+
+.soldOutTag {
+  position: absolute;
+  bottom: var(--s-2);
+  left: var(--s-2);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-xs);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.promo {
+  position: absolute;
+  top: var(--s-2);
+  left: var(--s-2);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-xs);
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .fav {
   position: absolute;
-  top: -6px;
-  left: -6px;
-  width: 26px;
-  height: 26px;
-  border-radius: var(--r-full);
-  background: var(--surface);
-  border: 1px solid var(--line-2);
-  color: var(--text-3);
+  top: var(--s-2);
+  right: var(--s-2);
   display: grid;
   place-items: center;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity var(--d-fast) var(--ease),
-    transform var(--d-fast) var(--ease), color var(--d-fast) var(--ease),
-    border-color var(--d-fast) var(--ease);
-}
-
-/* Always visible once saved, on touch devices, and on hover/focus. */
-.card:hover .fav,
-.card:focus-within .fav,
-.favActive {
-  opacity: 1;
-  transform: scale(1);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line-2);
+  color: var(--text-3);
+  transition: color var(--d-fast) var(--ease),
+    border-color var(--d-fast) var(--ease), transform var(--d-fast) var(--ease);
 }
 
 .fav:hover {
   color: var(--text);
-  border-color: var(--line-3);
+  transform: scale(1.06);
 }
 
 .favActive {
@@ -357,16 +305,10 @@
   color: var(--danger);
 }
 
-@media (hover: none) {
-  .fav {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .body {
   flex: 1;
   min-width: 0;
+  padding: var(--s-3) var(--s-2) 0;
 }
 
 .name {
@@ -376,7 +318,7 @@
 }
 
 .description {
-  margin-top: 1px;
+  margin-top: 2px;
   font-size: var(--t-base);
   color: var(--text-2);
   overflow: hidden;
@@ -390,17 +332,20 @@
   color: var(--text-3);
 }
 
+.stockLow {
+  color: var(--warn);
+}
+
 .stockOut {
   color: var(--danger);
 }
 
-.side {
-  flex: none;
+.foot {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--s-2);
-  padding-right: var(--s-1);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-2) var(--s-1);
 }
 
 .price {
@@ -410,27 +355,25 @@
   font-variant-numeric: tabular-nums;
 }
 
-.promo {
-  position: absolute;
-  top: var(--s-3);
-  right: var(--s-3);
-  padding: 2px var(--s-2);
-  border-radius: var(--r-xs);
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
 /* ---------------- Responsive ---------------- */
-@media (max-width: 900px) {
-  .grid {
+@media (max-width: 1000px) {
+  .featured {
     grid-template-columns: 1fr;
   }
 
-  .poster {
-    width: 300px;
+  .posterLead {
+    min-height: 220px;
+  }
+
+  .posterStack {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -448,34 +391,43 @@
     display: none;
   }
 
-  .promoTrack {
-    padding-left: var(--s-4);
-    padding-right: var(--s-4);
-    margin-left: calc(var(--s-4) * -1);
-    margin-right: calc(var(--s-4) * -1);
-    scroll-padding-left: var(--s-4);
+  .posterStack {
+    grid-template-columns: 1fr;
   }
 
-  .poster {
-    width: 78vw;
-    max-width: 320px;
+  .posterLead {
+    min-height: 0;
+    padding: var(--s-5);
   }
 
-  .posterArt {
-    height: 128px;
-    font-size: 56px;
+  .posterLead .posterArt {
+    width: 64px;
+    height: 64px;
+    font-size: 34px;
   }
 
-  /* Larger tap targets on the card itself. */
-  .card {
-    padding: var(--s-3);
+  .posterLead .posterTitle {
+    font-size: var(--t-xl);
+  }
+
+  .grid {
     gap: var(--s-3);
   }
 
-  .thumb {
-    width: 64px;
-    height: 64px;
-    font-size: 30px;
+  .media {
+    font-size: 40px;
+  }
+
+  .body {
+    padding: var(--s-3) var(--s-1) 0;
+  }
+
+  .foot {
+    padding: var(--s-3) var(--s-1) 0;
+  }
+
+  .description {
+    font-size: var(--t-sm);
   }
 }
 

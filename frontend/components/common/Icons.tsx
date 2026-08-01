@@ -91,6 +91,20 @@ export function MinusIcon({ size = 16 }: IconProps) {
   );
 }
 
+export function UserIcon({ size = 22 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="8.6" r="3.9" stroke="currentColor" strokeWidth="1.9" />
+      <path
+        d="M4.8 20.2a7.4 7.4 0 0 1 14.4 0"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function CheckIcon({ size = 16 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>

@@ -2,6 +2,7 @@
 import { formatPrice } from "@/utils/currency";
 import type { CartLine } from "@/types";
 import QuantitySelector from "../product/QuantitySelector";
+import { TrashIcon } from "../common/Icons";
 import styles from "./Cart.module.css";
 
 export type { CartLine };
@@ -9,9 +10,15 @@ export type { CartLine };
 interface CartItemProps {
   line: CartLine;
   onQuantityChange: (id: string, quantity: number) => void;
+  /** Optional explicit remove action, shown alongside the line total. */
+  onRemove?: (id: string) => void;
 }
 
-export default function CartItem({ line, onQuantityChange }: CartItemProps) {
+export default function CartItem({
+  line,
+  onQuantityChange,
+  onRemove,
+}: CartItemProps) {
   const { product, quantity } = line;
 
   return (
@@ -31,9 +38,21 @@ export default function CartItem({ line, onQuantityChange }: CartItemProps) {
         />
       </div>
 
-      <span className={styles.lineTotal}>
-        {formatPrice(product.price * quantity)}
-      </span>
+      <div className={styles.lineSide}>
+        <span className={styles.lineTotal}>
+          {formatPrice(product.price * quantity)}
+        </span>
+        {onRemove && (
+          <button
+            type="button"
+            className={styles.remove}
+            onClick={() => onRemove(product.id)}
+            aria-label={`Remove ${product.name}`}
+          >
+            <TrashIcon size={16} />
+          </button>
+        )}
+      </div>
     </li>
   );
 }

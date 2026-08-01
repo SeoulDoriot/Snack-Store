@@ -1,32 +1,32 @@
-// Store home and featured products page.
-import { useEffect, useMemo, useRef, useState } from "react";
+// Store home: featured posters, category filter and the product sections.
+import { useMemo, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import PageLayout from "@/components/layout/PageLayout";
 import Header from "@/components/layout/Header";
 import ProductFilters from "@/components/product/ProductFilters";
 import ProductGrid from "@/components/product/ProductGrid";
-import PromoCarousel from "@/components/product/PromoCarousel";
-import SearchBar from "@/components/product/SearchBar";
-import AutoHeight from "@/components/common/AutoHeight";
+import FeaturedBanner from "@/components/product/FeaturedBanner";
 import Button from "@/components/common/Button";
 import EmptyState from "@/components/common/EmptyState";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { CameraIcon, HeartIcon, SearchIcon } from "@/components/common/Icons";
 import { useCart } from "@/hooks/useCart";
 import { useNotify } from "@/context/NotificationContext";
-import { CATEGORIES, PRODUCTS } from "@/data/products";
+import { formatPrice } from "@/utils/currency";
+import {
+  CATEGORIES,
+  FEATURES,
+  PRODUCTS,
+  SECTIONS,
+  type Category,
+} from "@/data/products";
 import styles from "@/styles/Home.module.css";
 
 type Filter = (typeof CATEGORIES)[number];
 
-/** Matches the .pageOut animation duration in Product.module.css. */
-const EXIT_MS = 190;
-
-const PROMOS = PRODUCTS.filter((product) => product.promo);
-
-function matches(haystack: string, query: string): boolean {
-  return haystack.toLowerCase().includes(query);
+function matches(haystack: string, needle: string): boolean {
+  return haystack.toLowerCase().includes(needle);
 }
 
 export default function HomePage() {
@@ -39,6 +39,7 @@ export default function HomePage() {
     favourites,
     add,
     setQuantity,
+    remove,
     toggleFavourite,
     drawerOpen,
     openDrawer,
@@ -47,18 +48,15 @@ export default function HomePage() {
   } = useCart();
 
   const [category, setCategory] = useState<Filter>("All");
-  const [shown, setShown] = useState<Filter>("All");
-  const [leaving, setLeaving] = useState(false);
-  const [direction, setDirection] = useState(1);
   const [query, setQuery] = useState("");
   const [savedOnly, setSavedOnly] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /** Everything matching the current search, category and wishlist filter. */
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
 
     return PRODUCTS.filter((product) => {
-      if (shown !== "All" && product.category !== shown) return false;
+      if (category !== "All" && product.category !== category) return false;
       if (savedOnly && !favourites.includes(product.id)) return false;
       if (!needle) return true;
       return (
@@ -67,25 +65,20 @@ export default function HomePage() {
         matches(product.category, needle)
       );
     });
-  }, [shown, query, savedOnly, favourites]);
+  }, [category, query, savedOnly, favourites]);
 
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
+  const searching = query.trim().length > 0;
+  const browsing = !searching && !savedOnly && category === "All";
 
-  function selectCategory(next: Filter) {
-    if (next === category) return;
-
-    setDirection(CATEGORIES.indexOf(next) > CATEGORIES.indexOf(category) ? 1 : -1);
-    setCategory(next);
-    setLeaving(true);
-
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setShown(next);
-      setLeaving(false);
-    }, EXIT_MS);
-  }
+  // Sections are the default view; any active filter collapses to one grid.
+  const sections = useMemo(
+    () =>
+      SECTIONS.map((section) => ({
+        ...section,
+        items: PRODUCTS.filter(section.match),
+      })).filter((section) => section.items.length > 0),
+    []
+  );
 
   function addToCart(id: string) {
     const product = PRODUCTS.find((item) => item.id === id);
@@ -95,19 +88,20 @@ export default function HomePage() {
     notify(`${product.name} added`, { text: "Open your bag to check out." });
   }
 
+  function selectFeature(target: "All" | Category) {
+    setCategory(target);
+    setQuery("");
+    setSavedOnly(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function resetFilters() {
     setQuery("");
     setSavedOnly(false);
-    selectCategory("All");
+    setCategory("All");
   }
 
-  function goToCheckout() {
-    closeDrawer();
-    router.push("/checkout");
-  }
-
-  const searching = query.trim().length > 0;
-  const showPromos = !searching && !savedOnly && shown === "All";
+  const showBagBar = ready && count > 0;
 
   return (
     <>
@@ -126,82 +120,133 @@ export default function HomePage() {
           meta="Open now · Dorm B, near campus"
           favouriteCount={ready ? favourites.length : 0}
           cartCount={ready ? count : 0}
+          searchValue={query}
+          onSearchChange={setQuery}
           onFavourites={() => setSavedOnly((current) => !current)}
           onCart={openDrawer}
         />
 
-        <div className={styles.content}>
+        <div
+          className={`appWidth ${styles.content} ${
+            showBagBar ? styles.contentWithBar : ""
+          }`}
+        >
           <section className={styles.hero}>
             <span className={styles.badge}>
               <CameraIcon size={14} />
               Scanned the QR? You&apos;re in.
             </span>
-            <h2 className={styles.headline}>
+            <h1 className={styles.headline}>
               Snacks &amp; drinks, delivered to your dorm.
-            </h2>
+            </h1>
             <p className={styles.subhead}>
               Order before 9PM · usually delivered within 20 minutes.
             </p>
           </section>
 
-          <div className={styles.toolbar}>
-            <div className={styles.searchSlot}>
-              <SearchBar value={query} onChange={setQuery} />
-            </div>
+          <div className={styles.filters}>
             <ProductFilters
               categories={CATEGORIES}
               active={category}
-              onChange={selectCategory}
+              onChange={setCategory}
             />
           </div>
 
-          {showPromos && <PromoCarousel products={PROMOS} onAdd={addToCart} />}
+          {browsing && (
+            <div className={styles.featuredSlot}>
+              <FeaturedBanner features={FEATURES} onSelect={selectFeature} />
+            </div>
+          )}
 
-          <div className={styles.sectionHead}>
-            <h2 className={styles.sectionTitle}>
-              {savedOnly ? "Saved items" : searching ? "Results" : "Available now"}
-            </h2>
-            <span className={styles.sectionCount}>
-              {visible.length} item{visible.length === 1 ? "" : "s"}
-            </span>
-          </div>
+          {browsing ? (
+            sections.map((section) => (
+              <section key={section.id} className={styles.section}>
+                <div className={styles.sectionHead}>
+                  <div>
+                    <h2 className={styles.sectionTitle}>{section.title}</h2>
+                    <p className={styles.sectionSubtitle}>{section.subtitle}</p>
+                  </div>
+                  <span className={styles.sectionCount}>
+                    {section.items.length} item
+                    {section.items.length === 1 ? "" : "s"}
+                  </span>
+                </div>
 
-          <AutoHeight>
-            {visible.length > 0 ? (
-              <ProductGrid
-                key={`${shown}-${savedOnly}`}
-                products={visible}
-                favourites={ready ? favourites : []}
-                onToggleFavourite={toggleFavourite}
-                onAdd={addToCart}
-                direction={direction}
-                leaving={leaving}
-              />
-            ) : (
-              <EmptyState
-                icon={savedOnly ? <HeartIcon size={22} /> : <SearchIcon size={22} />}
-                title={
-                  savedOnly
-                    ? "Nothing saved yet"
-                    : searching
-                      ? `No matches for “${query.trim()}”`
-                      : "Nothing in this category"
-                }
-                description={
-                  savedOnly
-                    ? "Tap the heart on any product to save it for later."
-                    : "Try another category, or clear your filters to see everything."
-                }
-                action={
-                  <Button variant="secondary" size="sm" onClick={resetFilters}>
-                    Show all products
-                  </Button>
-                }
-              />
-            )}
-          </AutoHeight>
+                <ProductGrid
+                  products={section.items}
+                  favourites={ready ? favourites : []}
+                  onToggleFavourite={toggleFavourite}
+                  onAdd={addToCart}
+                />
+              </section>
+            ))
+          ) : (
+            <section className={styles.section}>
+              <div className={styles.sectionHead}>
+                <div>
+                  <h2 className={styles.sectionTitle}>
+                    {savedOnly
+                      ? "Saved items"
+                      : searching
+                        ? "Search results"
+                        : category}
+                  </h2>
+                </div>
+                <span className={styles.sectionCount}>
+                  {visible.length} item{visible.length === 1 ? "" : "s"}
+                </span>
+              </div>
+
+              {visible.length > 0 ? (
+                <ProductGrid
+                  key={`${category}-${savedOnly}-${searching}`}
+                  products={visible}
+                  favourites={ready ? favourites : []}
+                  onToggleFavourite={toggleFavourite}
+                  onAdd={addToCart}
+                />
+              ) : (
+                <EmptyState
+                  icon={
+                    savedOnly ? <HeartIcon size={22} /> : <SearchIcon size={22} />
+                  }
+                  title={
+                    savedOnly
+                      ? "Nothing saved yet"
+                      : searching
+                        ? `No matches for “${query.trim()}”`
+                        : "Nothing in this category"
+                  }
+                  description={
+                    savedOnly
+                      ? "Tap the heart on any product to save it for later."
+                      : "Try another category, or clear your filters to see everything."
+                  }
+                  action={
+                    <Button variant="secondary" size="sm" onClick={resetFilters}>
+                      Show all products
+                    </Button>
+                  }
+                />
+              )}
+            </section>
+          )}
         </div>
       </PageLayout>
+
+      {showBagBar && (
+        <div className={styles.bagBar}>
+          <span className={styles.bagBarBody}>
+            <span className={styles.bagBarCount}>
+              {count} item{count === 1 ? "" : "s"} in bag
+            </span>
+            <span className={styles.bagBarTotal}>{formatPrice(subtotal)}</span>
+          </span>
+          <Button size="sm" onClick={openDrawer}>
+            View bag
+          </Button>
+        </div>
+      )}
 
       <CartDrawer
         open={drawerOpen}
@@ -209,7 +254,11 @@ export default function HomePage() {
         subtotal={subtotal}
         onClose={closeDrawer}
         onQuantityChange={setQuantity}
-        onCheckout={goToCheckout}
+        onRemove={remove}
+        onCheckout={() => {
+          closeDrawer();
+          router.push("/checkout");
+        }}
       />
     </>
   );

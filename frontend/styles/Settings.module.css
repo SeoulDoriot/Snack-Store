@@ -1,0 +1,267 @@
+/* Apple-Settings-style grouped rows. */
+
+/* Horizontal padding comes from the shared `.appWidth` container. */
+.page {
+  padding-top: var(--s-7);
+  padding-bottom: var(--s-12);
+}
+
+.inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ---------------- Profile card ---------------- */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-size: var(--t-xl);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.profileBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileName {
+  font-size: var(--t-lg);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.profileMeta {
+  margin-top: 1px;
+  font-size: var(--t-base);
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------------- Groups ---------------- */
+.group {
+  margin-top: var(--s-7);
+}
+
+.groupTitle {
+  margin-bottom: var(--s-2);
+  padding-left: var(--s-1);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.rows {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  padding: var(--s-4) var(--s-5);
+  text-align: left;
+  background: none;
+  transition: background-color var(--d-fast) var(--ease);
+}
+
+.row + .row {
+  border-top: 1px solid var(--line);
+}
+
+/* Only rows that actually do something get the hover affordance. */
+.rowButton {
+  cursor: pointer;
+}
+
+.rowButton:hover {
+  background: var(--surface-2);
+}
+
+.rowBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowLabel {
+  display: block;
+  font-size: var(--t-md);
+  font-weight: 500;
+}
+
+.rowHint {
+  display: block;
+  margin-top: 1px;
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+.rowValue {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--t-base);
+  color: var(--text-3);
+}
+
+.chevron {
+  color: var(--text-3);
+}
+
+/* ---------------- Toggle ---------------- */
+.toggle {
+  position: relative;
+  width: 46px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: var(--line-3);
+  transition: background-color var(--d-base) var(--ease);
+}
+
+.toggleOn {
+  background: var(--accent);
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-full);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(24, 24, 22, 0.24);
+  transition: transform var(--d-base) var(--ease);
+}
+
+.toggleOn .knob {
+  transform: translateX(18px);
+}
+
+/* ---------------- Danger ---------------- */
+.danger {
+  color: var(--danger);
+  font-weight: 550;
+}
+
+.footNote {
+  margin-top: var(--s-5);
+  padding: 0 var(--s-1);
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+/* ---------------- Wishlist rows ---------------- */
+.wishThumb {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--surface-3);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.wishActions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.iconAction {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-sm);
+  color: var(--text-3);
+  transition: background-color var(--d-fast) var(--ease),
+    color var(--d-fast) var(--ease);
+}
+
+.iconAction:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ---------------- Order status ---------------- */
+.statusChip {
+  padding: 2px var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+/* ---------------- Help ---------------- */
+.helpBody {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.helpItem {
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.helpItem strong {
+  color: var(--text);
+}
+
+/* ---------------- Edit form ---------------- */
+.editFields {
+  display: grid;
+  gap: var(--s-4);
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: var(--s-5) var(--s-5) var(--s-8);
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--s-5) var(--s-4) var(--s-8);
+  }
+
+  .row {
+    padding: var(--s-4);
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: var(--t-lg);
+  }
+}
