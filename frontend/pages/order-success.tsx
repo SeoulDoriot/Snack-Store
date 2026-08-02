@@ -125,7 +125,7 @@ export default function OrderSuccessPage() {
           </div>
 
           <div className={styles.doneActions}>
-            <Button variant="secondary" onClick={() => router.push("/account")}>
+            <Button variant="secondary" onClick={() => router.push("/settings")}>
               View orders
             </Button>
             <Button onClick={() => router.push("/")}>Keep shopping</Button>
