@@ -1,0 +1,105 @@
+/* Sign in and register screens. */
+
+.page {
+  padding-top: var(--s-12);
+  padding-bottom: var(--s-16);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: var(--s-7);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--e-1);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--s-5);
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-size: var(--t-lg);
+  font-weight: 700;
+}
+
+.title {
+  font-size: var(--t-2xl);
+  font-weight: 680;
+  letter-spacing: var(--tr-tighter);
+}
+
+.subtitle {
+  margin-top: var(--s-2);
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.fields {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+}
+
+.action {
+  margin-top: var(--s-6);
+}
+
+.alt {
+  margin-top: var(--s-5);
+  text-align: center;
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.altLink {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.altLink:hover {
+  text-decoration: underline;
+}
+
+.notice {
+  margin-bottom: var(--s-5);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: var(--t-base);
+}
+
+.formError {
+  margin-bottom: var(--s-4);
+}
+
+/* Full-page state while a protected route checks the session. */
+.gate {
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-top: var(--s-7);
+  }
+
+  .card {
+    padding: var(--s-5);
+    border: none;
+    box-shadow: none;
+  }
+
+  .title {
+    font-size: var(--t-xl);
+  }
+}

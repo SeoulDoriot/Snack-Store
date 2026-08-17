@@ -1,0 +1,206 @@
+/* Account and order history. */
+
+.page {
+  padding-top: var(--s-7);
+  padding-bottom: var(--s-12);
+  max-width: 760px;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.summaryName {
+  font-size: var(--t-lg);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.summaryMeta {
+  margin-top: 1px;
+  font-size: var(--t-base);
+  color: var(--text-3);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin: var(--s-8) 0 var(--s-4);
+}
+
+.title {
+  font-size: var(--t-xl);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.error {
+  margin-bottom: var(--s-4);
+}
+
+.orders {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s-4);
+}
+
+.order {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.orderHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.orderNumber {
+  font-size: var(--t-md);
+  font-weight: 650;
+  letter-spacing: var(--tr-tight);
+}
+
+.orderDate {
+  margin-top: 1px;
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+/* Status colour follows the workflow: waiting → moving → done. */
+.status {
+  flex: none;
+  padding: 3px var(--s-3);
+  border-radius: var(--r-full);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+
+.status[data-status="pending"] {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.status[data-status="preparing"],
+.status[data-status="delivering"] {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.status[data-status="delivered"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.status[data-status="cancelled"] {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  display: grid;
+  gap: var(--s-3);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.itemArt {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--surface-3);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  display: block;
+  font-size: var(--t-base);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemQty {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--text-3);
+}
+
+.itemPrice {
+  flex: none;
+  font-size: var(--t-base);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.orderFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  border-top: 1px solid var(--line);
+}
+
+.orderTotalLabel {
+  font-size: var(--t-base);
+  color: var(--text-2);
+}
+
+.orderTotal {
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: var(--tr-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .summary {
+    padding: var(--s-4);
+  }
+
+  .orderHead,
+  .items {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+  }
+
+  .orderFoot {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+  }
+}

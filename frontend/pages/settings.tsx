@@ -1,7 +1,7 @@
 // Profile and settings, grouped Apple-Settings style.
 //
-// Mock only — the profile, preferences and wishlist live in localStorage.
-// There is no account backend yet.
+// The delivery profile, preferences and wishlist are kept on the device.
+// Signing in adds order history across devices and, for staff, the admin area.
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -12,12 +12,12 @@ import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 import EmptyState from "@/components/common/EmptyState";
 import {
-  BagIcon,
   ChevronRightIcon,
   HeartIcon,
   TrashIcon,
 } from "@/components/common/Icons";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
 import { useNotify } from "@/context/NotificationContext";
 import { formatPrice } from "@/utils/currency";
@@ -92,6 +92,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { notify } = useNotify();
   const { favouriteProducts, toggleFavourite, add, clear } = useCart();
+  const { user, isAdmin, available, signOut } = useAuth();
 
   const [profile, setProfile] = useLocalStorage<Profile>(
     PROFILE_KEY,
@@ -122,7 +123,19 @@ export default function SettingsPage() {
     setPrefs((current) => ({ ...current, [key]: value }));
   }
 
-  function logout() {
+  async function logout() {
+    // Sign out of Supabase when there is a real session, then clear anything
+    // held on this device either way.
+    try {
+      if (user) await signOut();
+    } catch (error) {
+      notify("Could not sign out", {
+        text: (error as Error).message,
+        tone: "error",
+      });
+      return;
+    }
+
     setProfile(DEFAULT_PROFILE);
     setPrefs(DEFAULT_PREFS);
     clear();
@@ -242,11 +255,29 @@ export default function SettingsPage() {
               </div>
             </section>
 
-            {/* ---- Order history ---- */}
+            {/* ---- Orders and access ---- */}
             <section className={styles.group}>
-              <h2 className={styles.groupTitle}>Order history</h2>
+              <h2 className={styles.groupTitle}>Orders</h2>
               <div className={styles.rows}>
-                {lastOrder ? (
+                <button
+                  type="button"
+                  className={`${styles.row} ${styles.rowButton}`}
+                  onClick={() => router.push("/account")}
+                >
+                  <span className={styles.rowBody}>
+                    <span className={styles.rowLabel}>Order history</span>
+                    <span className={styles.rowHint}>
+                      {user
+                        ? "Every order on your account"
+                        : "Sign in to see your past orders"}
+                    </span>
+                  </span>
+                  <span className={styles.rowValue}>
+                    <ChevronRightIcon size={16} />
+                  </span>
+                </button>
+
+                {lastOrder && (
                   <button
                     type="button"
                     className={`${styles.row} ${styles.rowButton}`}
@@ -255,8 +286,7 @@ export default function SettingsPage() {
                     <span className={styles.rowBody}>
                       <span className={styles.rowLabel}>{lastOrder.id}</span>
                       <span className={styles.rowHint}>
-                        {lastOrder.items.length} product
-                        {lastOrder.items.length === 1 ? "" : "s"} ·{" "}
+                        Most recent order on this device ·{" "}
                         {formatPrice(lastOrder.total)}
                       </span>
                     </span>
@@ -267,12 +297,24 @@ export default function SettingsPage() {
                       <ChevronRightIcon size={16} />
                     </span>
                   </button>
-                ) : (
-                  <EmptyState
-                    icon={<BagIcon size={22} />}
-                    title="No orders yet"
-                    description="Your past orders will appear here once you place one."
-                  />
+                )}
+
+                {isAdmin && (
+                  <button
+                    type="button"
+                    className={`${styles.row} ${styles.rowButton}`}
+                    onClick={() => router.push("/admin")}
+                  >
+                    <span className={styles.rowBody}>
+                      <span className={styles.rowLabel}>Staff dashboard</span>
+                      <span className={styles.rowHint}>
+                        Manage orders, products and stock
+                      </span>
+                    </span>
+                    <span className={styles.rowValue}>
+                      <ChevronRightIcon size={16} />
+                    </span>
+                  </button>
                 )}
               </div>
             </section>
@@ -323,17 +365,38 @@ export default function SettingsPage() {
                   <span className={styles.rowValue}>Prototype · mock data</span>
                 </div>
 
-                <button
-                  type="button"
-                  className={`${styles.row} ${styles.rowButton}`}
-                  onClick={() => setLogoutOpen(true)}
-                >
-                  <span className={styles.rowBody}>
-                    <span className={`${styles.rowLabel} ${styles.danger}`}>
-                      Log out
+                {user || !available ? (
+                  <button
+                    type="button"
+                    className={`${styles.row} ${styles.rowButton}`}
+                    onClick={() => setLogoutOpen(true)}
+                  >
+                    <span className={styles.rowBody}>
+                      <span className={`${styles.rowLabel} ${styles.danger}`}>
+                        Log out
+                      </span>
+                      <span className={styles.rowHint}>
+                        {user ? user.email : "Clears this device"}
+                      </span>
                     </span>
-                  </span>
-                </button>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={`${styles.row} ${styles.rowButton}`}
+                    onClick={() => router.push("/auth/login")}
+                  >
+                    <span className={styles.rowBody}>
+                      <span className={styles.rowLabel}>Sign in</span>
+                      <span className={styles.rowHint}>
+                        Keep your orders across devices
+                      </span>
+                    </span>
+                    <span className={styles.rowValue}>
+                      <ChevronRightIcon size={16} />
+                    </span>
+                  </button>
+                )}
               </div>
             </section>
 

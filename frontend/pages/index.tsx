@@ -9,18 +9,14 @@ import ProductGrid from "@/components/product/ProductGrid";
 import FeaturedBanner from "@/components/product/FeaturedBanner";
 import Button from "@/components/common/Button";
 import EmptyState from "@/components/common/EmptyState";
+import Skeleton from "@/components/common/Skeleton";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { CameraIcon, HeartIcon, SearchIcon } from "@/components/common/Icons";
 import { useCart } from "@/hooks/useCart";
+import { useCatalog } from "@/context/CatalogContext";
 import { useNotify } from "@/context/NotificationContext";
 import { formatPrice } from "@/utils/currency";
-import {
-  CATEGORIES,
-  FEATURES,
-  PRODUCTS,
-  SECTIONS,
-  type Category,
-} from "@/data/products";
+import { CATEGORIES, FEATURES, SECTIONS, type Category } from "@/data/products";
 import styles from "@/styles/Home.module.css";
 
 type Filter = (typeof CATEGORIES)[number];
@@ -32,6 +28,7 @@ function matches(haystack: string, needle: string): boolean {
 export default function HomePage() {
   const router = useRouter();
   const { notify } = useNotify();
+  const { products, byId, loading } = useCatalog();
   const {
     lines,
     count,
@@ -55,7 +52,7 @@ export default function HomePage() {
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
 
-    return PRODUCTS.filter((product) => {
+    return products.filter((product) => {
       if (category !== "All" && product.category !== category) return false;
       if (savedOnly && !favourites.includes(product.id)) return false;
       if (!needle) return true;
@@ -65,7 +62,7 @@ export default function HomePage() {
         matches(product.category, needle)
       );
     });
-  }, [category, query, savedOnly, favourites]);
+  }, [products, category, query, savedOnly, favourites]);
 
   const searching = query.trim().length > 0;
   const browsing = !searching && !savedOnly && category === "All";
@@ -75,13 +72,13 @@ export default function HomePage() {
     () =>
       SECTIONS.map((section) => ({
         ...section,
-        items: PRODUCTS.filter(section.match),
+        items: products.filter(section.match),
       })).filter((section) => section.items.length > 0),
-    []
+    [products]
   );
 
   function addToCart(id: string) {
-    const product = PRODUCTS.find((item) => item.id === id);
+    const product = byId.get(id);
     if (!product) return;
 
     add(id);
@@ -158,7 +155,24 @@ export default function HomePage() {
             </div>
           )}
 
-          {browsing ? (
+          {loading ? (
+            <section className={styles.section}>
+              <div className={styles.sectionHead}>
+                <div>
+                  <h2 className={styles.sectionTitle}>Loading the shelves…</h2>
+                </div>
+              </div>
+              <div className={styles.skeletonGrid}>
+                {Array.from({ length: 8 }, (_, index) => (
+                  <div key={index} className={styles.skeletonCard}>
+                    <Skeleton className={styles.skeletonMedia} height="auto" />
+                    <Skeleton width="70%" height={14} />
+                    <Skeleton width="45%" height={12} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : browsing ? (
             sections.map((section) => (
               <section key={section.id} className={styles.section}>
                 <div className={styles.sectionHead}>

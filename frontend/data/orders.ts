@@ -1,8 +1,12 @@
-// Order shapes and mock order history for the prototype.
+// Order shapes shared by the checkout and confirmation screens.
+//
+// The status values come from the database enum so the local receipt and a
+// row in `public.orders` always describe the same set of states.
+import type { OrderStatus } from "@/types/database";
 
 export const LAST_ORDER_KEY = "hak-shop.lastOrder";
 
-export type OrderStatus = "pending" | "preparing" | "delivering" | "delivered";
+export type { OrderStatus };
 
 export interface OrderItem {
   id: string;
@@ -40,7 +44,17 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
   preparing: "Preparing",
   delivering: "On the way",
   delivered: "Delivered",
+  cancelled: "Cancelled",
 };
+
+/** Statuses an admin can move an order to, in workflow order. */
+export const STATUS_FLOW: OrderStatus[] = [
+  "pending",
+  "preparing",
+  "delivering",
+  "delivered",
+  "cancelled",
+];
 
 export function readLastOrder(): PlacedOrder | null {
   try {

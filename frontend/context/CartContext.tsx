@@ -1,7 +1,7 @@
 // Bag and wishlist state, shared by every page and persisted locally.
 //
-// Mock-data only: quantities are clamped against the stock numbers in
-// `data/products.ts`. No network calls happen here.
+// Quantities are clamped against live stock from the catalog, which comes
+// from Supabase when the database is set up and from seed data otherwise.
 import {
   createContext,
   useCallback,
@@ -10,16 +10,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { PRODUCTS } from "@/data/products";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useCatalog } from "./CatalogContext";
 import type { CartItems, CartLine, Product } from "@/types";
 
 const CART_KEY = "hak-shop.cart";
 const FAVOURITES_KEY = "hak-shop.favourites";
-
-const BY_ID = new Map<string, Product>(
-  PRODUCTS.map((product) => [product.id, product])
-);
 
 export interface CartContextValue {
   /** Quantity keyed by product id. */
@@ -55,6 +51,10 @@ const EMPTY_ITEMS: CartItems = {};
 const EMPTY_FAVOURITES: string[] = [];
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  // Quantities are clamped against live stock, so the cart follows whatever
+  // the catalog currently says.
+  const { products, byId } = useCatalog();
+
   const [items, setItems, itemsReady] = useLocalStorage<CartItems>(
     CART_KEY,
     EMPTY_ITEMS
@@ -67,7 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const setQuantity = useCallback(
     (id: string, quantity: number) => {
-      const product = BY_ID.get(id);
+      const product = byId.get(id);
       if (!product) return;
 
       setItems((current) => {
@@ -77,12 +77,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return next;
       });
     },
-    [setItems]
+    [setItems, byId]
   );
 
   const add = useCallback(
     (id: string, quantity = 1) => {
-      const product = BY_ID.get(id);
+      const product = byId.get(id);
       if (!product) return;
 
       setItems((current) => ({
@@ -90,7 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         [id]: Math.min((current[id] ?? 0) + quantity, product.stock),
       }));
     },
-    [setItems]
+    [setItems, byId]
   );
 
   const remove = useCallback(
@@ -108,7 +108,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const toggleFavourite = useCallback(
     (id: string) => {
-      if (!BY_ID.has(id)) return;
+      if (!byId.has(id)) return;
 
       setFavourites((current) =>
         current.includes(id)
@@ -116,25 +116,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
           : [...current, id]
       );
     },
-    [setFavourites]
+    [setFavourites, byId]
   );
 
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
-  // Built from PRODUCTS rather than Object.keys(items) so the bag always lists
-  // in catalog order, and so ids left over from an older catalog are ignored.
+  // Built from the catalog rather than Object.keys(items) so the bag lists in
+  // catalog order, and so ids left over from an older catalog are ignored.
   const lines = useMemo<CartLine[]>(
     () =>
-      PRODUCTS.filter((product) => (items[product.id] ?? 0) > 0).map(
-        (product) => ({ product, quantity: items[product.id] })
-      ),
-    [items]
+      products
+        .filter((product) => (items[product.id] ?? 0) > 0)
+        .map((product) => ({ product, quantity: items[product.id] })),
+    [items, products]
   );
 
   const favouriteProducts = useMemo(
-    () => PRODUCTS.filter((product) => favourites.includes(product.id)),
-    [favourites]
+    () => products.filter((product) => favourites.includes(product.id)),
+    [favourites, products]
   );
 
   const value = useMemo<CartContextValue>(() => {

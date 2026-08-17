@@ -1,7 +1,9 @@
 // Checkout: delivery details, payment choice and order placement.
 //
-// Mock only — placing an order writes the receipt to localStorage and clears
-// the bag. No request leaves the browser.
+// Orders go through the place_order() database function, which prices the
+// order from the products table and decrements stock atomically. If the
+// database is not set up yet the order is recorded on the device instead and
+// the shopper is told so.
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -23,11 +25,9 @@ import {
   type CheckoutErrors,
   type CheckoutFields,
 } from "@/utils/validation";
-import { LAST_ORDER_KEY, type PlacedOrder } from "@/data/orders";
+import { placeOrder } from "@/services/order.service";
+import { useAuth } from "@/hooks/useAuth";
 import styles from "@/styles/Checkout.module.css";
-
-/** Stand-in for the round trip a real API call would take. */
-const PLACING_MS = 900;
 
 const EMPTY_FIELDS: CheckoutFields = {
   name: "",
@@ -42,6 +42,7 @@ const EMPTY_FIELDS: CheckoutFields = {
 export default function CheckoutPage() {
   const router = useRouter();
   const { notify } = useNotify();
+  const { profile } = useAuth();
   const { lines, subtotal, clear, ready } = useCart();
 
   const [fields, setFields] = useState<CheckoutFields>(EMPTY_FIELDS);
@@ -55,11 +56,26 @@ export default function CheckoutPage() {
     if (submitted) setErrors(validateCheckout(fields));
   }, [fields, submitted]);
 
+  // Prefill from the signed-in profile, without clobbering typing in progress.
+  useEffect(() => {
+    if (!profile) return;
+
+    setFields((current) => ({
+      ...current,
+      name: current.name || profile.name,
+      studentId: current.studentId || profile.student_id,
+      batch: current.batch || profile.batch,
+      phone: current.phone || profile.phone,
+      dorm: current.dorm || profile.dorm || "Dorm B",
+      room: current.room || profile.room,
+    }));
+  }, [profile]);
+
   function change(field: keyof CheckoutFields, value: string) {
     setFields((current) => ({ ...current, [field]: value }));
   }
 
-  function placeOrder() {
+  async function submitOrder() {
     const found = validateCheckout(fields);
     setErrors(found);
     setSubmitted(true);
@@ -74,36 +90,31 @@ export default function CheckoutPage() {
 
     setPlacing(true);
 
-    window.setTimeout(() => {
-      const order: PlacedOrder = {
-        id: `HS-${Date.now().toString(36).toUpperCase()}`,
-        placedAt: new Date().toISOString(),
-        status: "pending",
-        customer: { ...fields },
+    try {
+      const { persisted } = await placeOrder({
+        customer: fields,
         payment,
-        items: lines.map((line) => ({
-          id: line.product.id,
-          name: line.product.name,
-          image: line.product.image,
-          price: line.product.price,
-          quantity: line.quantity,
-        })),
-        subtotal,
-        delivery: 0,
-        total: subtotal,
-      };
-
-      try {
-        window.localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(order));
-      } catch {
-        // Storage unavailable — the confirmation page falls back to a
-        // generic message rather than failing the order.
-      }
+        lines,
+      });
 
       clear();
-      setPlacing(false);
       router.push("/order-success");
-    }, PLACING_MS);
+
+      if (!persisted) {
+        notify("Saved on this device", {
+          text: "The database is not set up yet, so the order was not sent.",
+        });
+      }
+    } catch (error) {
+      // Out of stock, bad input, or the network — keep the bag intact so the
+      // student can retry without re-adding everything.
+      notify("Could not send your order", {
+        text: (error as Error).message,
+        tone: "error",
+      });
+    } finally {
+      setPlacing(false);
+    }
   }
 
   // Wait for the stored bag to load before deciding the bag is empty.
@@ -163,7 +174,7 @@ export default function CheckoutPage() {
                   <Button
                     block
                     size="lg"
-                    onClick={placeOrder}
+                    onClick={submitOrder}
                     disabled={placing || lines.length === 0}
                   >
                     {placing ? (

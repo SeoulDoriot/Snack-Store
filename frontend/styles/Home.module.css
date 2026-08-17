@@ -79,6 +79,28 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------------- Catalog skeleton ---------------- */
+.skeletonGrid {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+/* Matches the product card's media block so nothing jumps on load. */
+.skeletonMedia {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-md);
+}
+
 /* ---------------- Sticky mobile bag bar ---------------- */
 .bagBar {
   position: fixed;
